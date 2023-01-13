@@ -11,8 +11,7 @@ import java.io.Serial;
 @Table(name="AUTH_TBL")
 @Component
 public class Authority implements GrantedAuthority {
-//    @Serial
-//    private static final long serialVersionUID = 8132219101674303151L;
+    private static final long serialVersionUID = 8132219101674303151L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

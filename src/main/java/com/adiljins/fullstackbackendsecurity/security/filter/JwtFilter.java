@@ -35,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         // If the header is not present or is not formatted correctly, return a 401
-        if (StringUtils.hasText(header) && !header.startsWith("Bearer ")) {
+        if (!StringUtils.hasText(header) || (StringUtils.hasText(header) && !header.startsWith("Bearer "))) {
             chain.doFilter(request,response);
             return;
         }
