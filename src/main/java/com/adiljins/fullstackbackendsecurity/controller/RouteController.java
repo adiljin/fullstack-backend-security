@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/rout")
 @CrossOrigin("http://localhost:3000/")
+//@CrossOrigin(origins = "http://localhost:3000/")
 public class RouteController {
 
     @Autowired

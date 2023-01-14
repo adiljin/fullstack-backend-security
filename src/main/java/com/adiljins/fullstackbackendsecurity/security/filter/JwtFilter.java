@@ -41,7 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         //Authorization -> Bearer encoded json webtoken
-        final String token = header.split(" ")[1].trim();
+//        final String token = header.split(" ")[1].trim();
+        final String token = header.split(" ")[1].trim().replaceAll("^\"|\"$", "");
 
         //Get user identity and set it on the spring security context
         UserDetails userDetails = userRepository
