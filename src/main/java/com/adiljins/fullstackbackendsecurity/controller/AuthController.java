@@ -3,6 +3,7 @@ package com.adiljins.fullstackbackendsecurity.controller;
 import com.adiljins.fullstackbackendsecurity.model.User;
 import com.adiljins.fullstackbackendsecurity.security.dataTransferObject.AuthCredentialsRequest;
 import com.adiljins.fullstackbackendsecurity.security.filter.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +52,16 @@ public class AuthController {
         }
 //        return ResponseEntity.ok(null);
     }
+
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateToken(@RequestParam String token, @AuthenticationPrincipal User user){
+        try{
+            Boolean isTokenValid = jwtUtil.validateToken(token, user);
+            return ResponseEntity.ok(isTokenValid);
+        }catch (ExpiredJwtException e){
+            return ResponseEntity.ok(false);
+        }
+    }
+
 
 }
