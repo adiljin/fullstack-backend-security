@@ -2,8 +2,10 @@ package com.adiljins.fullstackbackendsecurity.model.essential;
 
 import com.adiljins.fullstackbackendsecurity.model.routes_management.Route;
 import com.adiljins.fullstackbackendsecurity.model.ship.Ship;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.stereotype.Component;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="FRE_TBL")
@@ -28,6 +30,8 @@ public class Freight {
     private int weight;
     private int price;
     private int routesPrice;
+    @CreationTimestamp
+    private LocalDate createdAt;
 
 //    public int genPrice(List<Route> list, Route routeF, Route routeT){
 //        int result = 0;
@@ -75,5 +79,11 @@ public class Freight {
     public Route getRouteT() {
         return routeT;
     }
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
 
+    public void genDate() {
+        this.createdAt = LocalDate.now();
+    }
 }

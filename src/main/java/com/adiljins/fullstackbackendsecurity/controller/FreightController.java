@@ -19,6 +19,8 @@ public class FreightController {
     @PostMapping
     Freight newFreight(@RequestBody Freight newFreight){
         newFreight.genPrice();
+        newFreight.genDate();
+        System.out.println(newFreight.getCreatedAt());
         return freightRepository.save(newFreight);
     }
 
