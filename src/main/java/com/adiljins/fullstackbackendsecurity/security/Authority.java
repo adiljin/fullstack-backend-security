@@ -1,6 +1,7 @@
 package com.adiljins.fullstackbackendsecurity.security;
 
 import com.adiljins.fullstackbackendsecurity.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,8 @@ public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @JsonIgnore
     private User user;
     private String authority;
 

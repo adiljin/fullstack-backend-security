@@ -1,12 +1,11 @@
 package com.adiljins.fullstackbackendsecurity.model;
 import com.adiljins.fullstackbackendsecurity.security.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="USER_TBL")
@@ -17,7 +16,8 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
-//    private List<Authority> authorities = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Authority> authorities = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -35,6 +35,11 @@ public class User implements UserDetails {
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
@@ -42,12 +47,12 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new Authority("USER_ROLE"));
-        return roles;
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        List<GrantedAuthority> roles = new ArrayList<>();
+//
+//        return roles;
+//    }
 
     @Override
     public boolean isAccountNonExpired() {
