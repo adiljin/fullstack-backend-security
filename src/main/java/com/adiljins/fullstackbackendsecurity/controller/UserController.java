@@ -55,6 +55,11 @@ public class UserController {
         return userRepository.findById(id).orElseThrow(()->new NotFoundException(id));
     }
 
+    @GetMapping("/name/{name}")
+    User getUserByName(@PathVariable String name){
+        return userRepository.findByUsername(name).orElseThrow();
+    }
+
     @PutMapping("/{id}")
     User updateUser(@RequestBody User newUser,@PathVariable Long id){
         return userRepository.findById(id).map(user -> {
@@ -64,6 +69,17 @@ public class UserController {
             user.setPassword(encodedPassword);
             return userRepository.save(user);
         }).orElseThrow(()->new NotFoundException(id));
+    }
+
+    @PutMapping("/name/{name}")
+    User updateUserByName(@RequestBody User newUser,@PathVariable String name){
+        return userRepository.findByUsername(name).map(user -> {
+            user.setUsername(newUser.getUsername());
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+            user.setPassword(encodedPassword);
+            return userRepository.save(user);
+        }).orElseThrow();
     }
 
     @DeleteMapping("/{id}")
