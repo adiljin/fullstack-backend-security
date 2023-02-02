@@ -4,8 +4,10 @@ import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
 import com.adiljins.fullstackbackendsecurity.model.essential.Customer;
 import com.adiljins.fullstackbackendsecurity.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -41,12 +43,26 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    String deleteCustomer(@PathVariable Long id){
-        if(!customerRepository.existsById(id)){
-            throw new NotFoundException(id);
+    ResponseEntity<Object> deleteFre(@PathVariable Long id){
+        try{
+            if(!customerRepository.existsById(id)){
+                throw new NotFoundException(id);
+            }else{
+                customerRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Cannot delete, information is in use");
         }
-        customerRepository.deleteById(id);
-        return "Customer with id " + id + " has been deleted";
     }
+
+//    @DeleteMapping("/{id}")
+//    String deleteCustomer(@PathVariable Long id){
+//        if(!customerRepository.existsById(id)){
+//            throw new NotFoundException(id);
+//        }
+//        customerRepository.deleteById(id);
+//        return "Customer with id " + id + " has been deleted";
+//    }
 
 }

@@ -4,6 +4,7 @@ import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
 import com.adiljins.fullstackbackendsecurity.model.ship.ports_20.Container;
 import com.adiljins.fullstackbackendsecurity.repository.ship_repo.ContainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,11 +43,25 @@ public class ContainerController {
     }
 
     @DeleteMapping("/del/{id}")
-    String deleteContainer(@PathVariable Long id){
-        if(!containerRepository.existsById(id)){
-            throw new NotFoundException(id);
+    ResponseEntity<Object> deleteContainer(@PathVariable Long id){
+        try{
+            if(!containerRepository.existsById(id)){
+                throw new NotFoundException(id);
+            }else{
+                containerRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Cannot delete, information is in use");
         }
-        containerRepository.deleteById(id);
-        return "Container with id " + id + " has been deleted";
     }
+
+//    @DeleteMapping("/del/{id}")
+//    String deleteContainer(@PathVariable Long id){
+//        if(!containerRepository.existsById(id)){
+//            throw new NotFoundException(id);
+//        }
+//        containerRepository.deleteById(id);
+//        return "Container with id " + id + " has been deleted";
+//    }
 }

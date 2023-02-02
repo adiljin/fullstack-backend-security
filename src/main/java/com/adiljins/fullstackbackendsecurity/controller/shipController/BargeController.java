@@ -4,6 +4,7 @@ import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
 import com.adiljins.fullstackbackendsecurity.model.ship.ports_20.Barge;
 import com.adiljins.fullstackbackendsecurity.repository.ship_repo.BargeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,11 +45,25 @@ public class BargeController {
     }
 
     @DeleteMapping("/del/{id}")
-    String deleteBarge(@PathVariable Long id){
-        if(!bargeRepository.existsById(id)){
-            throw new NotFoundException(id);
+    ResponseEntity<Object> deleteBarge(@PathVariable Long id){
+        try{
+            if(!bargeRepository.existsById(id)){
+                throw new NotFoundException(id);
+            }else{
+                bargeRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Cannot delete, information is in use");
         }
-        bargeRepository.deleteById(id);
-        return "Barge with id " + id + " has been deleted";
     }
+
+//    @DeleteMapping("/del/{id}")
+//    String deleteBarge(@PathVariable Long id){
+//        if(!bargeRepository.existsById(id)){
+//            throw new NotFoundException(id);
+//        }
+//        bargeRepository.deleteById(id);
+//        return "Barge with id " + id + " has been deleted";
+//    }
 }

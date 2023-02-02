@@ -1,9 +1,15 @@
 package com.adiljins.fullstackbackendsecurity.controller;
 
 import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
+import com.adiljins.fullstackbackendsecurity.model.User;
 import com.adiljins.fullstackbackendsecurity.model.essential.Freight;
 import com.adiljins.fullstackbackendsecurity.repository.FreightRepository;
+import com.adiljins.fullstackbackendsecurity.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

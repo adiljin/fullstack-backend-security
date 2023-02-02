@@ -4,6 +4,7 @@ import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
 import com.adiljins.fullstackbackendsecurity.model.routes_management.Route;
 import com.adiljins.fullstackbackendsecurity.repository.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -68,11 +69,25 @@ public class RouteController {
     }
 
     @DeleteMapping("/route/{id}")
-    String deleteRoute(@PathVariable Long id){
-        if(!routeRepository.existsById(id)){
-            throw new NotFoundException(id);
+    ResponseEntity<Object> deleteRoute(@PathVariable Long id){
+        try{
+            if(!routeRepository.existsById(id)){
+                throw new NotFoundException(id);
+            }else{
+                routeRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Cannot delete, information is in use");
         }
-        routeRepository.deleteById(id);
-        return "Route with id " + id + " has been deleted";
     }
+
+//    @DeleteMapping("/route/{id}")
+//    String deleteRoute(@PathVariable Long id){
+//        if(!routeRepository.existsById(id)){
+//            throw new NotFoundException(id);
+//        }
+//        routeRepository.deleteById(id);
+//        return "Route with id " + id + " has been deleted";
+//    }
 }

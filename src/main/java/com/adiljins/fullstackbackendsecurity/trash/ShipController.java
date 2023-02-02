@@ -1,4 +1,4 @@
-package com.adiljins.fullstackbackendsecurity.controller.shipController;//package com.adiljins.fullstackbackend.controller.shipController;
+package com.adiljins.fullstackbackendsecurity.trash;//package com.adiljins.fullstackbackend.controller.shipController;
 //
 //import com.adiljins.fullstackbackend.exception.NotFoundException;
 //import com.adiljins.fullstackbackend.model.ship.Ship;

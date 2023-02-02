@@ -5,6 +5,7 @@ import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
 import com.adiljins.fullstackbackendsecurity.model.ship.ports_10.Cargo;
 import com.adiljins.fullstackbackendsecurity.repository.ship_repo.CargoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,12 +42,27 @@ public class CargoController {
             return cargoRepository.save(cargo);
         }).orElseThrow(()->new NotFoundException(id));
     }
+
     @DeleteMapping("/del/{id}")
-    String deleteCargo(@PathVariable Long id){
-        if(!cargoRepository.existsById(id)){
-            throw new NotFoundException(id);
+    ResponseEntity<Object> deleteCargo(@PathVariable Long id){
+        try{
+            if(!cargoRepository.existsById(id)){
+                throw new NotFoundException(id);
+            }else{
+                cargoRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Cannot delete, information is in use");
         }
-        cargoRepository.deleteById(id);
-        return "Cargo with id " + id + " has been deleted";
     }
+
+//    @DeleteMapping("/del/{id}")
+//    String deleteCargo(@PathVariable Long id){
+//        if(!cargoRepository.existsById(id)){
+//            throw new NotFoundException(id);
+//        }
+//        cargoRepository.deleteById(id);
+//        return "Cargo with id " + id + " has been deleted";
+//    }
 }

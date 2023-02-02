@@ -4,6 +4,7 @@ import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
 import com.adiljins.fullstackbackendsecurity.model.ship.ports_10.Tugboat;
 import com.adiljins.fullstackbackendsecurity.repository.ship_repo.TugboatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,12 +43,26 @@ public class TugboatController {
     }
 
     @DeleteMapping("/del/{id}")
-    String deleteTugboat(@PathVariable Long id){
-        if(!tugboatRepository.existsById(id)){
-            throw new NotFoundException(id);
+    ResponseEntity<Object> deleteTugboat(@PathVariable Long id){
+        try{
+            if(!tugboatRepository.existsById(id)){
+                throw new NotFoundException(id);
+            }else{
+                tugboatRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Cannot delete, information is in use");
         }
-        tugboatRepository.deleteById(id);
-        return "Tugboat with id " + id + " has been deleted";
     }
+
+//    @DeleteMapping("/del/{id}")
+//    String deleteTugboat(@PathVariable Long id){
+//        if(!tugboatRepository.existsById(id)){
+//            throw new NotFoundException(id);
+//        }
+//        tugboatRepository.deleteById(id);
+//        return "Tugboat with id " + id + " has been deleted";
+//    }
 
 }
