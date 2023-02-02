@@ -1,6 +1,7 @@
 package com.adiljins.fullstackbackendsecurity.controller;
 
 import com.adiljins.fullstackbackendsecurity.exception.NotFoundException;
+import com.adiljins.fullstackbackendsecurity.model.User;
 import com.adiljins.fullstackbackendsecurity.repository.AuthorityRepository;
 import com.adiljins.fullstackbackendsecurity.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class AuthorityController {
     @GetMapping("/get")
     List<Authority> getAuthorities(){
         return authorityRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    Authority getAuthorityById(@PathVariable Long id){
+        return authorityRepository.findById(id).orElseThrow(()->new NotFoundException(id));
     }
 
     @PutMapping("/{id}")

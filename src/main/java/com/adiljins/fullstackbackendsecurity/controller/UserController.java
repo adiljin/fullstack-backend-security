@@ -5,9 +5,12 @@ import com.adiljins.fullstackbackendsecurity.repository.AuthorityRepository;
 import com.adiljins.fullstackbackendsecurity.repository.UserRepository;
 import com.adiljins.fullstackbackendsecurity.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -22,15 +25,24 @@ public class UserController {
     private AuthorityRepository authorityRepository;
 
     @PostMapping()
-    void newUser(@RequestBody User newUser){
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(newUser.getPassword());
-        newUser.setPassword(encodedPassword);
-        userRepository.save(newUser);
-        Authority authority = new Authority();
-        authority.setAuthority("ROLE_STD");
-        authority.setUser(newUser);
-        authorityRepository.save(authority);
+    ResponseEntity<Object> newUser(@RequestBody User newUser){
+        try{
+            if (!userRepository.findByUsername(newUser.getUsername()).isPresent()){
+                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+                newUser.setPassword(encodedPassword);
+                userRepository.save(newUser);
+                Authority authority = new Authority();
+                authority.setAuthority("ROLE_STD");
+                authority.setUser(newUser);
+                authorityRepository.save(authority);
+                return ResponseEntity.ok().build();
+            }else{
+                throw new UsernameNotFoundException("This username already exist");
+            }
+        }catch (UsernameNotFoundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/users")
@@ -47,7 +59,9 @@ public class UserController {
     User updateUser(@RequestBody User newUser,@PathVariable Long id){
         return userRepository.findById(id).map(user -> {
             user.setUsername(newUser.getUsername());
-            user.setPassword(newUser.getPassword());
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+            user.setPassword(encodedPassword);
             return userRepository.save(user);
         }).orElseThrow(()->new NotFoundException(id));
     }
